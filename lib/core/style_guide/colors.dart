@@ -36,7 +36,7 @@ class AppColors {
   // Button colors - Warm and inviting
   static const buttonPrimary = Color.fromRGBO(255, 140, 80, 1); // Warm orange
   static const buttonSecondary = Color.fromRGBO(100, 160, 220, 1); // Warm blue
-  static const buttonDisabled = Color.fromRGBO(200, 190, 180, 1); // Light gray
+  static const buttonDisabled = Color(0xFFE0E0E0); // Light gray
 
   // Button text colors
   static const textButtonDefault = Color.fromRGBO(255, 255, 255, 1); // White

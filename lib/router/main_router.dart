@@ -2,21 +2,21 @@ import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
 
-import '../features/splash_screen/splash_screen.dart';
+import '../features/auth_guard/auth_guard_screen.dart';
 import 'route_helper.dart';
 
 class MainRouter implements AppRouter {
   @override
   String get name => 'main';
 
-  static const String splashScreen = '/';
+  static const String authGuardScreen = '/';
 
   final GlobalKey<NavigatorState> key = GlobalKey();
 
   final LinkedHashMap<String, RouteBuilder> routes =
       LinkedHashMap.from(<String, RouteBuilder>{
-        splashScreen: ({settings}) {
-          return _buildRoute(const SplashScreen(), settings: settings);
+        authGuardScreen: ({settings}) {
+          return _buildRoute(const AuthGuardScreen(), settings: settings);
         },
       });
 

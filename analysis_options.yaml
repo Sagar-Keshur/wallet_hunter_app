@@ -3,6 +3,7 @@ include: package:lint/analysis_options.yaml
 analyzer:
   errors:
     missing_required_param: error
+    avoid_bool_literals_in_conditional_expressions: ignore
   exclude:
     - "lib/**/*.g.dart"
     - lib/generated/intl/*.dart

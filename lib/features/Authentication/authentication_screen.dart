@@ -24,43 +24,50 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
   }
 
   @override
+  void dispose() {
+    authStore.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) {
-          return;
-        }
-        authStore.onBackPressed();
+    return Observer(
+      builder: (_) {
+        return PopScope(
+          canPop: authStore.currentPage == 0 ? true : false,
+          onPopInvokedWithResult: (didPop, result) async {
+            if (didPop) {
+              return;
+            }
+            await authStore.onBackPressed();
+          },
+          child: Scaffold(
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(kToolbarHeight),
+              child: Observer(
+                builder: (_) {
+                  if (authStore.currentPage == 0) {
+                    return const SizedBox.shrink();
+                  }
+                  return AppAppBar(
+                    leadingIcon: Icons.arrow_back_ios_new_rounded,
+                    onLeadingIconPressed: authStore.onBackPressed,
+                  );
+                },
+              ),
+            ),
+
+            body: SafeArea(
+              child: PageView(
+                controller: authStore.pageController,
+                onPageChanged: (index) => authStore.currentPage = index,
+                physics: const NeverScrollableScrollPhysics(),
+                children: const [MobileNumberInputPage(), VerifyOtpPage()],
+              ),
+            ),
+          ),
+        );
       },
-      child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(kToolbarHeight),
-          child: Observer(
-            builder: (_) {
-              if (authStore.currentPage == 0) {
-                return const SizedBox.shrink();
-              }
-
-              return AppAppBar(
-                leadingIcon: Icons.arrow_back_ios_new_rounded,
-                onLeadingIconPressed: authStore.onBackPressed,
-              );
-            },
-          ),
-        ),
-
-        body: SafeArea(
-          child: PageView(
-            controller: authStore.pageController,
-            onPageChanged: (index) {
-              authStore.currentPage = index;
-            },
-            physics: const NeverScrollableScrollPhysics(),
-            children: const [MobileNumberInputPage(), VerifyOtpPage()],
-          ),
-        ),
-      ),
     );
   }
 }

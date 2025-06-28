@@ -30,22 +30,22 @@ class _AppAppBarState extends State<AppAppBar> {
       backgroundColor: Colors.transparent,
       surfaceTintColor: Colors.transparent,
       foregroundColor: Colors.transparent,
+      systemOverlayStyle: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
+      ),
       automaticallyImplyLeading: false,
       elevation: 0,
       centerTitle: false,
-      title: widget.titleWidget ??
+      title:
+          widget.titleWidget ??
           (widget.title.isNotEmpty
-              ? Text(
-                  widget.title,
-                  style: AppStyles.h7,
-                )
+              ? Text(widget.title, style: AppStyles.h7)
               : null),
       leading: widget.leadingIcon != null
           ? IconButton(
-              icon: Icon(
-                widget.leadingIcon,
-                color: AppColors.iconsSecondary,
-              ),
+              icon: Icon(widget.leadingIcon, color: AppColors.iconsSecondary),
               onPressed: widget.onLeadingIconPressed,
             )
           : null,

@@ -26,9 +26,10 @@ class _AppLoaderState extends State<AppLoader>
 
   @override
   void initState() {
-    _controller = (widget.controller ??
-        AnimationController(vsync: this, duration: widget.duration))
-      ..repeat();
+    _controller =
+        (widget.controller ??
+              AnimationController(vsync: this, duration: widget.duration))
+          ..repeat();
     super.initState();
   }
 

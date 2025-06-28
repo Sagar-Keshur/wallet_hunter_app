@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../dependency_manager/dependency_manager.dart';
@@ -20,5 +22,14 @@ class RouteHelper {
 
   void popUntil(String routeName) {
     mainRouter.key.currentState?.popUntil(ModalRoute.withName(routeName));
+  }
+
+  void showAuthGuardScreenAndRemoveEverything() {
+    unawaited(
+      mainRouter.key.currentState?.pushNamedAndRemoveUntil(
+        MainRouter.authGuardScreen,
+        (route) => false,
+      ),
+    );
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/enum/state_type.dart';
 import '../../../core/stores/auth_store/auth_store.dart';
 import '../../../core/style_guide/style_guide.dart';
 import '../../../core/widgets/widgets.dart';
@@ -16,20 +17,18 @@ class MobileNumberInputPage extends StatefulWidget {
 
 class _MobileNumberInputPageState extends State<MobileNumberInputPage> {
   final TextEditingController _mobileController = TextEditingController();
-  final FocusNode _mobileFocusNode = FocusNode();
   late AuthStore authStore;
 
   @override
   void initState() {
     super.initState();
     authStore = context.read<AuthStore>();
+    _mobileController.text = authStore.mobileNumber;
   }
 
-  @override
-  void dispose() {
-    _mobileController.dispose();
-    _mobileFocusNode.dispose();
-    super.dispose();
+  Future<void> _onContinuePressed() async {
+    FocusScope.of(context).unfocus();
+    await authStore.sendOtp();
   }
 
   @override
@@ -109,33 +108,30 @@ class _MobileNumberInputPageState extends State<MobileNumberInputPage> {
                   const SizedBox(height: AppSpacing.spacing3xl),
                   AppTextField(
                     controller: _mobileController,
-                    focusNode: _mobileFocusNode,
                     label: 'Mobile Number',
                     hintText: 'Enter your 10-digit mobile number',
                     keyboardType: TextInputType.phone,
                     leadingIcon: Icons.phone,
-                    errorText: authStore.mobileNumberError,
                     inputFormatters: [
                       FilteringTextInputFormatter.digitsOnly,
                       LengthLimitingTextInputFormatter(10),
                     ],
                     textInputAction: TextInputAction.done,
-                    onSubmitted: (_) {
-                      FocusScope.of(context).unfocus();
+                    onSubmitted: (_) => _onContinuePressed(),
+                    onChanged: (value) {
+                      authStore.mobileNumber = value ?? '';
                     },
                   ),
                 ],
               ),
             ),
             const SizedBox(height: AppSpacing.spacing4xl),
-
             Observer(
               builder: (_) => AppButton(
-                text: 'Continue',
-                onPressed: () async {
-                  FocusScope.of(context).unfocus();
-                },
-                isDisabled: authStore.mobileNumberError != null,
+                text: 'Send OTP',
+                onPressed: _onContinuePressed,
+                isLoading: authStore.sendOtpStatus.isLoading,
+                isDisabled: !authStore.isMobileNumberValid,
               ),
             ),
             const SizedBox(height: AppSpacing.spacingLg),

@@ -73,19 +73,20 @@ class _OnboardingScreenImplState extends State<_OnboardingScreenImpl> {
               ),
           child: Observer(
             builder: (_) {
-              return  const Column(
+              return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Observer(
-                  //   builder: (_) {
-                  //     return AppButton(
-                  //       text: 'Continue',
-                  //       isLoading: onboardingStore.onboardingStatus.isLoading,
-                  //       isDisabled: onboardingStore.isDisabled,
-                  //       onPressed: onboardingStore.onContinue,
-                  //     );
-                  //   },
-                  // ),
+                  Observer(
+                    builder: (_) {
+                      return AppButton(
+                        text: 'Continue',
+                        onPressed: () async {},
+                        // isLoading: onboardingStore.onboardingStatus.isLoading,
+                        // isDisabled: onboardingStore.isDisabled,
+                        // onPressed: onboardingStore.onContinue,
+                      );
+                    },
+                  ),
                 ],
               );
             },

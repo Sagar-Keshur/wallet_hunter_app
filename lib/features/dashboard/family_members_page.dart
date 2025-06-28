@@ -5,12 +5,6 @@ import '../../core/style_guide/style_guide.dart';
 import '../../core/widgets/widgets.dart';
 
 class FamilyMember {
-  final String name;
-  final String relation;
-  final String avatar;
-  final bool isLinked;
-  final Color color;
-
   FamilyMember({
     required this.name,
     required this.relation,
@@ -18,6 +12,11 @@ class FamilyMember {
     required this.isLinked,
     required this.color,
   });
+  final String name;
+  final String relation;
+  final String avatar;
+  final bool isLinked;
+  final Color color;
 }
 
 class FamilyMembersPage extends StatefulWidget {
@@ -77,7 +76,7 @@ class _FamilyMembersPageState extends State<FamilyMembersPage> {
             onPressed: () {
               // TODO: Add new family member
             },
-            icon: Icon(Icons.person_add, color: AppColors.familyPrimary),
+            icon: const Icon(Icons.person_add, color: AppColors.familyPrimary),
           ),
         ],
       ),
@@ -93,16 +92,15 @@ class _FamilyMembersPageState extends State<FamilyMembersPage> {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      AppColors.familyPrimary.withOpacity(0.1),
-                      AppColors.familySecondary.withOpacity(0.1),
+                      AppColors.familyPrimary.withValues(alpha: 0.1),
+                      AppColors.familySecondary.withValues(alpha: 0.1),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusRound),
                   border: Border.all(
-                    color: AppColors.familyPrimary.withOpacity(0.3),
-                    width: 1,
+                    color: AppColors.familyPrimary.withValues(alpha: 0.3),
                   ),
                 ),
                 child: Row(
@@ -166,9 +164,8 @@ class _FamilyMembersPageState extends State<FamilyMembersPage> {
                         ),
                         border: Border.all(
                           color: member.isLinked
-                              ? member.color.withOpacity(0.3)
+                              ? member.color.withValues(alpha: 0.3)
                               : AppColors.borderDisabled,
-                          width: 1,
                         ),
                       ),
                       child: ListTile(
@@ -179,12 +176,12 @@ class _FamilyMembersPageState extends State<FamilyMembersPage> {
                           width: 50,
                           height: 50,
                           decoration: BoxDecoration(
-                            color: member.color.withOpacity(0.1),
+                            color: member.color.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(
                               AppSpacing.radiusRound,
                             ),
                             border: Border.all(
-                              color: member.color.withOpacity(0.3),
+                              color: member.color.withValues(alpha: 0.3),
                               width: 2,
                             ),
                           ),
@@ -218,8 +215,12 @@ class _FamilyMembersPageState extends State<FamilyMembersPage> {
                               ),
                               decoration: BoxDecoration(
                                 color: member.isLinked
-                                    ? AppColors.familySuccess.withOpacity(0.1)
-                                    : AppColors.familyWarning.withOpacity(0.1),
+                                    ? AppColors.familySuccess.withValues(
+                                        alpha: 0.1,
+                                      )
+                                    : AppColors.familyWarning.withValues(
+                                        alpha: 0.1,
+                                      ),
                                 borderRadius: BorderRadius.circular(
                                   AppSpacing.radiusMinimal,
                                 ),
@@ -235,7 +236,7 @@ class _FamilyMembersPageState extends State<FamilyMembersPage> {
                               ),
                             ),
                             const SizedBox(width: AppSpacing.spacingSm),
-                            Icon(
+                            const Icon(
                               Icons.arrow_forward_ios,
                               color: AppColors.textSecondary,
                               size: 16,
@@ -273,7 +274,6 @@ class _FamilyMembersPageState extends State<FamilyMembersPage> {
                       onPressed: () async {
                         // TODO: Navigate to family tree view
                       },
-                      buttonType: ButtonType.primary,
                       leadingIcon: Icons.account_tree,
                     ),
                   ),

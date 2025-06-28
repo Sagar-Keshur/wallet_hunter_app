@@ -30,7 +30,7 @@ class _FamilyTreePageState extends State<FamilyTreePage> {
             onPressed: () {
               // TODO: Edit tree
             },
-            icon: Icon(Icons.edit, color: AppColors.familyPrimary),
+            icon: const Icon(Icons.edit, color: AppColors.familyPrimary),
           ),
         ],
       ),
@@ -40,22 +40,20 @@ class _FamilyTreePageState extends State<FamilyTreePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header
               Container(
                 padding: const EdgeInsets.all(AppSpacing.spacing2xl),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      AppColors.treeNodeSelected.withOpacity(0.3),
-                      AppColors.familyPrimary.withOpacity(0.1),
+                      AppColors.treeNodeSelected.withValues(alpha: 0.3),
+                      AppColors.familyPrimary.withValues(alpha: 0.1),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusRound),
                   border: Border.all(
-                    color: AppColors.familyPrimary.withOpacity(0.3),
-                    width: 1,
+                    color: AppColors.familyPrimary.withValues(alpha: 0.3),
                   ),
                 ),
                 child: Row(
@@ -109,7 +107,7 @@ class _FamilyTreePageState extends State<FamilyTreePage> {
                   decoration: BoxDecoration(
                     color: AppColors.treeNode,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusRound),
-                    border: Border.all(color: AppColors.treeLine, width: 1),
+                    border: Border.all(color: AppColors.treeLine),
                   ),
                   child: Column(
                     children: [
@@ -117,10 +115,10 @@ class _FamilyTreePageState extends State<FamilyTreePage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          _buildTreeNode('👴', 'Grandpa', 'Father\'s Father'),
-                          _buildTreeNode('👵', 'Grandma', 'Father\'s Mother'),
-                          _buildTreeNode('👴', 'Grandpa', 'Mother\'s Father'),
-                          _buildTreeNode('👵', 'Grandma', 'Mother\'s Mother'),
+                          _buildTreeNode('👴', 'Grandpa', "Father's Father"),
+                          _buildTreeNode('👵', 'Grandma', "Father's Mother"),
+                          _buildTreeNode('👴', 'Grandpa', "Mother's Father"),
+                          _buildTreeNode('👵', 'Grandma', "Mother's Mother"),
                         ],
                       ),
 
@@ -129,16 +127,10 @@ class _FamilyTreePageState extends State<FamilyTreePage> {
                       // Connection lines
                       Container(
                         height: 20,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           border: Border(
-                            left: BorderSide(
-                              color: AppColors.treeLine,
-                              width: 1,
-                            ),
-                            right: BorderSide(
-                              color: AppColors.treeLine,
-                              width: 1,
-                            ),
+                            left: BorderSide(color: AppColors.treeLine),
+                            right: BorderSide(color: AppColors.treeLine),
                           ),
                         ),
                       ),
@@ -169,16 +161,10 @@ class _FamilyTreePageState extends State<FamilyTreePage> {
                       // Connection lines
                       Container(
                         height: 20,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           border: Border(
-                            left: BorderSide(
-                              color: AppColors.treeLine,
-                              width: 1,
-                            ),
-                            right: BorderSide(
-                              color: AppColors.treeLine,
-                              width: 1,
-                            ),
+                            left: BorderSide(color: AppColors.treeLine),
+                            right: BorderSide(color: AppColors.treeLine),
                           ),
                         ),
                       ),
@@ -206,16 +192,10 @@ class _FamilyTreePageState extends State<FamilyTreePage> {
                       // Connection lines
                       Container(
                         height: 20,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           border: Border(
-                            left: BorderSide(
-                              color: AppColors.treeLine,
-                              width: 1,
-                            ),
-                            right: BorderSide(
-                              color: AppColors.treeLine,
-                              width: 1,
-                            ),
+                            left: BorderSide(color: AppColors.treeLine),
+                            right: BorderSide(color: AppColors.treeLine),
                           ),
                         ),
                       ),
@@ -261,7 +241,6 @@ class _FamilyTreePageState extends State<FamilyTreePage> {
                       onPressed: () async {
                         // TODO: Export family tree
                       },
-                      buttonType: ButtonType.primary,
                       leadingIcon: Icons.download,
                     ),
                   ),
@@ -282,19 +261,21 @@ class _FamilyTreePageState extends State<FamilyTreePage> {
     bool isHighlighted = false,
     bool isFuture = false,
   }) {
-    Color nodeColor = isHighlighted
+    final Color nodeColor = isHighlighted
         ? AppColors.familyPrimary
         : isSelected
         ? AppColors.treeNodeSelected
         : AppColors.bgSecondary;
 
-    Color borderColor = isHighlighted
+    final Color borderColor = isHighlighted
         ? AppColors.familyPrimary
         : isSelected
-        ? AppColors.familyPrimary.withOpacity(0.5)
+        ? AppColors.familyPrimary.withValues(alpha: 0.5)
         : AppColors.treeLine;
 
-    Color textColor = isHighlighted ? AppColors.white : AppColors.textPrimary;
+    final Color textColor = isHighlighted
+        ? AppColors.white
+        : AppColors.textPrimary;
 
     return Container(
       padding: const EdgeInsets.all(AppSpacing.spacingMd),
@@ -305,7 +286,7 @@ class _FamilyTreePageState extends State<FamilyTreePage> {
         boxShadow: isHighlighted
             ? [
                 BoxShadow(
-                  color: AppColors.familyPrimary.withOpacity(0.3),
+                  color: AppColors.familyPrimary.withValues(alpha: 0.3),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -329,7 +310,7 @@ class _FamilyTreePageState extends State<FamilyTreePage> {
             relation,
             style: AppStyles.label2.copyWith(
               color: isHighlighted
-                  ? AppColors.white.withOpacity(0.8)
+                  ? AppColors.white.withValues(alpha: 0.8)
                   : AppColors.textSecondary,
               fontSize: 10,
             ),
@@ -343,7 +324,7 @@ class _FamilyTreePageState extends State<FamilyTreePage> {
                 vertical: 2,
               ),
               decoration: BoxDecoration(
-                color: AppColors.familyWarning.withOpacity(0.2),
+                color: AppColors.familyWarning.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(AppSpacing.radiusMinimal),
               ),
               child: Text(

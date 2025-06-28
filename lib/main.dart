@@ -5,10 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 import 'core/stores/app_store/app_store.dart';
-import 'core/style_guide/style_guide.dart';
+import 'core/style_guide/app_theme_data.dart';
 import 'dependency_manager/app_dependency_provider.dart';
 import 'dependency_manager/dependency_manager.dart';
-import 'features/home/home_screen.dart';
+import 'features/auth_guard/auth_guard_screen.dart';
 import 'features/splash_screen/splash_screen.dart';
 import 'router/main_router.dart';
 
@@ -20,8 +20,8 @@ Future<void> main() async {
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
-      statusBarBrightness: Brightness.dark,
+      statusBarIconBrightness: Brightness.dark,
+      statusBarBrightness: Brightness.light,
     ),
   );
 
@@ -65,11 +65,8 @@ class _InterviewApp extends StatelessWidget {
             navigatorObservers: [mainRouteObserver],
             onGenerateRoute: mainRouter.getRoute,
             debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              primaryColor: AppColors.black,
-              scaffoldBackgroundColor: AppColors.bgPrimary,
-            ),
-            home: const HomeScreen(),
+            theme: AppThemeData.theme,
+            home: const AuthGuardScreen(),
           ),
         );
       },

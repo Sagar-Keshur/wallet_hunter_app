@@ -67,7 +67,7 @@ class AppButton extends StatelessWidget {
                   Icon(
                     leadingIcon,
                     color: isDisabled
-                        ? AppColors.textSecondary
+                        ? AppColors.textPrimary
                         : buttonType.getIconColor(context),
                     size: 24,
                   ),
@@ -80,7 +80,7 @@ class AppButton extends StatelessWidget {
                   Icon(
                     trailingIcon,
                     color: isDisabled
-                        ? AppColors.textSecondary
+                        ? AppColors.textPrimary
                         : buttonType.getIconColor(context),
                     size: 24,
                   ),
@@ -105,7 +105,7 @@ class AppButton extends StatelessWidget {
             .getButtonTextStyle(context)
             .copyWith(
               color: isDisabled
-                  ? AppColors.textSecondary
+                  ? AppColors.textPrimary
                   : buttonType.getTextColor(context),
             ),
       ),
@@ -114,36 +114,5 @@ class AppButton extends StatelessWidget {
 
   Widget _getLoader(BuildContext context) {
     return AppLoader(color: buttonType.getTextColor(context));
-  }
-}
-
-class AppNextButton extends StatelessWidget {
-  const AppNextButton({required this.onTap, super.key});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: InkWell(
-        splashColor: Colors.transparent,
-        onTap: onTap,
-        child: Container(
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            borderRadius: BorderRadius.circular(50),
-          ),
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.spacing4xl,
-            vertical: AppSpacing.spacingMd,
-          ),
-          child: Text(
-            'Next',
-            style: AppStyles.b1.copyWith(color: AppColors.black),
-          ),
-        ),
-      ),
-    );
   }
 }
