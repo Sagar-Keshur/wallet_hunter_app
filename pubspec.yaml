@@ -1,0 +1,139 @@
+name: wallet_hunter_app
+description: "A Flutter project developed as part of a technical interview assessment"
+
+publish_to: 'none' 
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.8.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Firebase
+  # https://pub.dev/packages/firebase_core
+  firebase_core: ^3.14.0
+  # https://pub.dev/packages/firebase_crashlytics
+  firebase_crashlytics: ^4.3.7
+  # https://pub.dev/packages/firebase_auth
+  firebase_auth: ^5.6.0
+
+
+  # State Management
+  # https://pub.dev/packages/provider
+  provider: ^6.1.2
+  # https://pub.dev/packages/mobx
+  mobx: ^2.5.0
+  # https://pub.dev/packages/flutter_mobx
+  flutter_mobx: ^2.3.0
+
+  # Dependency Injection
+  # https://pub.dev/packages/get_it
+  get_it: ^8.0.3
+
+  # Utils
+  # https://pub.dev/packages/equatable
+  equatable: ^2.0.7
+  # https://pub.dev/packages/logger
+  logger: ^2.5.0
+  # https://pub.dev/packages/json_annotation
+  json_annotation: ^4.9.0
+  # https://pub.dev/packages/intl
+  intl: ^0.20.1
+  # https://pub.dev/packages/collection
+  collection: ^1.19.1
+  # https://pub.dev/packages/flutter_svg
+  flutter_svg: ^2.0.16
+
+  # https://pub.dev/packages/url_launcher
+  url_launcher: ^6.3.1
+  # https://pub.dev/packages/webview_flutter
+  webview_flutter: ^4.10.0
+  # https://pub.dev/packages/flutter_markdown
+  flutter_markdown: ^0.7.4+3
+  # https://pub.dev/packages/permission_handler
+  permission_handler: ^11.3.1
+  # https://pub.dev/packages/http
+  http: ^1.2.2
+  # https://pub.dev/packages/wakelock_plus
+  wakelock_plus: ^1.2.8
+
+  # https://pub.dev/packages/flutter_webrtc
+  flutter_webrtc: ^0.12.4
+  freezed_annotation: ^2.4.1
+
+
+  # https://pub.dev/packages/file_picker
+  file_picker: ^9.0.0
+    # https://pub.dev/packages/pdfx
+  pdfx: ^2.8.0
+  # https://pub.dev/packages/image
+  image: ^4.5.0
+  # https://pub.dev/packages/path_provider
+  path_provider: ^2.1.5
+  # https://pub.dev/packages/path
+  path: ^1.9.0
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  # https://pub.dev/packages/build_runner
+  build_runner: ^2.4.8
+  # https://pub.dev/packages/mobx_codegen
+  mobx_codegen: ^2.7.0
+  # https://pub.dev/packages/json_serializable
+  json_serializable: ^6.7.1
+  # https://pub.dev/packages/lint
+  lint: ^2.3.0
+  # https://pub.dev/packages/flutter_lints
+  flutter_lints: ^5.0.0
+  freezed: ^2.4.7
+
+
+dependency_overrides:
+  # https://pub.dev/packages/collection
+  collection: ^1.19.1
+  # https://pub.dev/packages/js
+  js: ^0.7.1
+  # https://pub.dev/packages/device_info_plus
+  device_info_plus: ^11.2.0
+
+
+flutter:
+  uses-material-design: true
+
+  assets:
+  - assets/fonts/
+  - assets/fonts/lato/
+
+fonts:
+  - family: Lato
+    fonts:
+      - asset: assets/fonts/lato/Lato-Black.ttf
+        weight: 900
+      - asset: assets/fonts/lato/Lato-BlackItalic.ttf
+        weight: 900
+        style: italic
+      - asset: assets/fonts/lato/Lato-Bold.ttf
+        weight: 700
+      - asset: assets/fonts/lato/Lato-BoldItalic.ttf
+        weight: 700
+        style: italic
+      - asset: assets/fonts/lato/Lato-Italic.ttf
+        weight: 400
+        style: italic
+      - asset: assets/fonts/lato/Lato-Regular.ttf
+        weight: 400
+      - asset: assets/fonts/lato/Lato-Light.ttf
+        weight: 300
+      - asset: assets/fonts/lato/Lato-LightItalic.ttf
+        weight: 300
+        style: italic
+      - asset: assets/fonts/lato/Lato-Thin.ttf
+        weight: 100
+      - asset: assets/fonts/lato/Lato-ThinItalic.ttf
+        weight: 100
+        style: italic
+        
