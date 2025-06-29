@@ -28,6 +28,7 @@ class AppTextField extends StatefulWidget {
     this.showHintOnTap = true,
     this.fillColor,
     this.hasBorder = true,
+    this.validator,
     super.key,
   });
 
@@ -57,6 +58,7 @@ class AppTextField extends StatefulWidget {
   final bool showHintOnTap;
   final Color? fillColor;
   final bool hasBorder;
+  final String? Function(String?)? validator;
 
   @override
   _AppTextFieldState createState() => _AppTextFieldState();
@@ -92,7 +94,7 @@ class _AppTextFieldState extends State<AppTextField> {
         ],
         Observer(
           builder: (_) {
-            return TextField(
+            return TextFormField(
               controller: widget.controller,
               focusNode: focusNode,
               inputFormatters: widget.inputFormatters,
@@ -105,11 +107,12 @@ class _AppTextFieldState extends State<AppTextField> {
                   ? TextCapitalization.sentences
                   : TextCapitalization.none,
               onChanged: (val) => widget.onChanged?.call(val),
-              onSubmitted: (val) => widget.onSubmitted?.call(val),
+              onFieldSubmitted: (val) => widget.onSubmitted?.call(val),
               autofillHints: widget.autofillHints,
               onTap: widget.onTap,
               autofocus: widget.autofocus,
               readOnly: widget.readOnly,
+              validator: widget.validator,
               decoration: InputDecoration(
                 hintText: store.hasFocus
                     ? widget.showHintOnTap
@@ -131,6 +134,7 @@ class _AppTextFieldState extends State<AppTextField> {
                   horizontal: 20,
                   vertical: 18,
                 ),
+
                 prefixIcon: (widget.leadingIcon != null
                     ? IconButton(
                         splashColor: Colors.transparent,

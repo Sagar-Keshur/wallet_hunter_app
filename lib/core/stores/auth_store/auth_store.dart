@@ -222,9 +222,10 @@ abstract class _AuthStore extends BaseStore with Store {
         }
         await _sharedPreferencesHelper.setUserId(result.user!.uid);
         await _sharedPreferencesHelper.setLoginStateTrue();
+        // TODO(Sagar): Add family head logic hear if exits then show dashboard else show onboarding
         verifyOtpStatus = Status.loaded;
         _logger.d('OTP verification successful');
-        _initAuthState();
+        getIt<RouteHelper>().showOnboardingScreen();
       },
       errorAction: (error) async {
         verifyOtpStatus = Status.error;

@@ -2,7 +2,10 @@ import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
 
+import '../features/add_member/add_member_screen.dart';
 import '../features/auth_guard/auth_guard_screen.dart';
+import '../features/dashboard/family_tree_page.dart';
+import '../features/onboarding/onboarding_screen.dart';
 import 'route_helper.dart';
 
 class MainRouter implements AppRouter {
@@ -10,6 +13,9 @@ class MainRouter implements AppRouter {
   String get name => 'main';
 
   static const String authGuardScreen = '/';
+  static const String onboardingScreen = '/onboarding';
+  static const String addMemberScreen = '/add-member';
+  static const String familyTreeScreen = '/family-tree';
 
   final GlobalKey<NavigatorState> key = GlobalKey();
 
@@ -17,6 +23,15 @@ class MainRouter implements AppRouter {
       LinkedHashMap.from(<String, RouteBuilder>{
         authGuardScreen: ({settings}) {
           return _buildRoute(const AuthGuardScreen(), settings: settings);
+        },
+        onboardingScreen: ({settings}) {
+          return _buildRoute(const OnboardingScreen(), settings: settings);
+        },
+        addMemberScreen: ({settings}) {
+          return _buildRoute(const AddMemberScreen(), settings: settings);
+        },
+        familyTreeScreen: ({settings}) {
+          return _buildRoute(const FamilyTreeScreen(), settings: settings);
         },
       });
 

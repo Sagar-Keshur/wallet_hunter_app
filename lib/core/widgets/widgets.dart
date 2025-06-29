@@ -21,7 +21,6 @@ part 'app_button.dart';
 part 'app_confirmation_dialog.dart';
 part 'app_icon_button.dart';
 part 'app_loader.dart';
-part 'app_progress_bar.dart';
 part 'app_radio.dart';
 part 'app_radio_tile.dart';
 part 'app_selection_tile.dart';

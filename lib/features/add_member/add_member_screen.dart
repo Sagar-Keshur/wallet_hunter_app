@@ -6,36 +6,37 @@ import '../../core/style_guide/style_guide.dart';
 import '../../core/widgets/widgets.dart';
 import 'pages/address_page.dart';
 import 'pages/contact_info_page.dart';
+import 'pages/member_summary_page.dart';
+import 'pages/native_place_page.dart';
 import 'pages/personal_info_page.dart';
-import 'pages/profile_summary_page.dart';
-import 'store/onboarding_store.dart';
+import 'store/add_member_store.dart';
 
-class OnboardingScreen extends StatelessWidget {
-  const OnboardingScreen({super.key});
+class AddMemberScreen extends StatelessWidget {
+  const AddMemberScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [Provider<OnboardingStore>(create: (_) => OnboardingStore())],
-      child: const _OnboardingScreenImpl(),
+      providers: [Provider<AddMemberStore>(create: (_) => AddMemberStore())],
+      child: const _AddMemberScreenImpl(),
     );
   }
 }
 
-class _OnboardingScreenImpl extends StatefulWidget {
-  const _OnboardingScreenImpl();
+class _AddMemberScreenImpl extends StatefulWidget {
+  const _AddMemberScreenImpl();
 
   @override
-  State<_OnboardingScreenImpl> createState() => _OnboardingScreenImplState();
+  State<_AddMemberScreenImpl> createState() => _AddMemberScreenImplState();
 }
 
-class _OnboardingScreenImplState extends State<_OnboardingScreenImpl> {
-  late final OnboardingStore onboardingStore;
+class _AddMemberScreenImplState extends State<_AddMemberScreenImpl> {
+  late final AddMemberStore addMemberStore;
 
   @override
   void initState() {
     super.initState();
-    onboardingStore = context.read<OnboardingStore>();
+    addMemberStore = context.read<AddMemberStore>();
     // getIt<Mixpanel>().timeEvent(TimeSpentOnOnboardingFlowEvent().name);
     // unawaited(analytics.maybeTrack(OnboardingStartedEvent()));
   }
@@ -48,20 +49,20 @@ class _OnboardingScreenImplState extends State<_OnboardingScreenImpl> {
         if (didPop) {
           return;
         }
-        onboardingStore.onBackPressed();
+        addMemberStore.onBackPressed();
       },
       child: Scaffold(
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
           child: AppAppBar(
             leadingIcon: Icons.arrow_back_ios_new_rounded,
-            onLeadingIconPressed: onboardingStore.onBackPressed,
+            onLeadingIconPressed: addMemberStore.onBackPressed,
             titleWidget: _buildTitleWidget(),
             actions: [
               Observer(
                 builder: (_) {
                   return Text(
-                    '${onboardingStore.currentPage + 1}/${onboardingStore.totalPages}',
+                    '${addMemberStore.currentPage + 1}/${addMemberStore.totalPages}',
                     style: AppStyles.b1.copyWith(fontWeight: FontWeight.w600),
                   );
                 },
@@ -70,16 +71,17 @@ class _OnboardingScreenImplState extends State<_OnboardingScreenImpl> {
           ),
         ),
         body: PageView(
-          controller: onboardingStore.pageController,
+          controller: addMemberStore.pageController,
           onPageChanged: (index) {
-            onboardingStore.currentPage = index;
+            addMemberStore.currentPage = index;
           },
           physics: const NeverScrollableScrollPhysics(),
           children: const [
             PersonalInfoPage(),
             ContactInfoPage(),
             AddressPage(),
-            ProfileSummaryPage(),
+            NativePlacePage(),
+            MemberSummaryPage(),
           ],
         ),
       ),
@@ -89,7 +91,7 @@ class _OnboardingScreenImplState extends State<_OnboardingScreenImpl> {
   Widget _buildTitleWidget() {
     return Observer(
       builder: (context) {
-        switch (onboardingStore.currentPage) {
+        switch (addMemberStore.currentPage) {
           case 0:
             return Row(
               children: [
@@ -113,7 +115,7 @@ class _OnboardingScreenImplState extends State<_OnboardingScreenImpl> {
                       const Text('Personal Information', style: AppStyles.h6),
                       const SizedBox(height: AppSpacing.spacingHalf),
                       Text(
-                        'Tell us about yourself',
+                        'Tell us about the family member',
                         style: AppStyles.p1.copyWith(
                           color: AppColors.textSecondary,
                         ),
@@ -146,7 +148,7 @@ class _OnboardingScreenImplState extends State<_OnboardingScreenImpl> {
                       const Text('Contact Information', style: AppStyles.h6),
                       const SizedBox(height: AppSpacing.spacingHalf),
                       Text(
-                        'How can we reach you?',
+                        'How can we reach them?',
                         style: AppStyles.p1.copyWith(
                           color: AppColors.textSecondary,
                         ),
@@ -176,10 +178,10 @@ class _OnboardingScreenImplState extends State<_OnboardingScreenImpl> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Address Information', style: AppStyles.h6),
+                      const Text('Current Address', style: AppStyles.h6),
                       const SizedBox(height: AppSpacing.spacingHalf),
                       Text(
-                        'Where do you live?',
+                        'Where do they live?',
                         style: AppStyles.p1.copyWith(
                           color: AppColors.textSecondary,
                         ),
@@ -199,6 +201,39 @@ class _OnboardingScreenImplState extends State<_OnboardingScreenImpl> {
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: const Icon(
+                    Icons.home,
+                    color: AppColors.white,
+                    size: 14,
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.spacingLg),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Native Place', style: AppStyles.h6),
+                      const SizedBox(height: AppSpacing.spacingHalf),
+                      Text(
+                        'Where are they from?',
+                        style: AppStyles.p1.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          case 4:
+            return Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(AppSpacing.spacingSm),
+                  decoration: BoxDecoration(
+                    color: AppColors.familyPrimary,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: const Icon(
                     Icons.summarize,
                     color: AppColors.white,
                     size: 14,
@@ -209,10 +244,10 @@ class _OnboardingScreenImplState extends State<_OnboardingScreenImpl> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Profile Summary', style: AppStyles.h6),
+                      const Text('Member Summary', style: AppStyles.h6),
                       const SizedBox(height: AppSpacing.spacingHalf),
                       Text(
-                        'Review your information',
+                        'Review all information',
                         style: AppStyles.p1.copyWith(
                           color: AppColors.textSecondary,
                         ),

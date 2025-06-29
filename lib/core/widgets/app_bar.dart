@@ -7,6 +7,7 @@ class AppAppBar extends StatefulWidget implements PreferredSizeWidget {
     this.leadingIcon,
     this.onLeadingIconPressed,
     this.actions = const [],
+    this.centerTitle = false,
     super.key,
   });
 
@@ -15,6 +16,7 @@ class AppAppBar extends StatefulWidget implements PreferredSizeWidget {
   final IconData? leadingIcon;
   final void Function()? onLeadingIconPressed;
   final List<Widget> actions;
+  final bool centerTitle;
 
   @override
   State<AppAppBar> createState() => _AppAppBarState();
@@ -37,7 +39,7 @@ class _AppAppBarState extends State<AppAppBar> {
       ),
       automaticallyImplyLeading: false,
       elevation: 0,
-      centerTitle: false,
+      centerTitle: widget.centerTitle,
       title:
           widget.titleWidget ??
           (widget.title.isNotEmpty
@@ -49,9 +51,10 @@ class _AppAppBarState extends State<AppAppBar> {
               onPressed: widget.onLeadingIconPressed,
             )
           : null,
+      titleSpacing: 0,
       actions: [
         ...widget.actions,
-        const SizedBox(width: AppSpacing.paddingComfortable),
+        const SizedBox(width: AppSpacing.paddingMargin),
       ],
     );
   }

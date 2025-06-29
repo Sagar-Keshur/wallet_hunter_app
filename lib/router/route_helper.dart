@@ -32,4 +32,24 @@ class RouteHelper {
       ),
     );
   }
+
+  void showOnboardingScreen() {
+    unawaited(
+      mainRouter.key.currentState?.pushReplacementNamed(
+        MainRouter.onboardingScreen,
+      ),
+    );
+  }
+
+  void showAddMemberScreen() {
+    unawaited(
+      mainRouter.key.currentState?.pushNamed(MainRouter.addMemberScreen),
+    );
+  }
+
+  void showFamilyTreeScreen() {
+    unawaited(
+      mainRouter.key.currentState?.pushNamed(MainRouter.familyTreeScreen),
+    );
+  }
 }
