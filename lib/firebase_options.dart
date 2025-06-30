@@ -65,4 +65,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'wallet-hunter-31dbb.firebasestorage.app',
     iosBundleId: 'com.example.walletHunterApp',
   );
+
 }
