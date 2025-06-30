@@ -4,7 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../../core/enum/gender_type.dart';
+import '../../../core/enum/state_type.dart';
+import '../../../core/models/family_model/family_model.dart';
 import '../../../core/stores/base_store/base_store.dart';
+import '../../../core/utils/api_helper.dart';
+import '../../../core/utils/shared_preferences_helper.dart';
 import '../../../dependency_manager/dependency_manager.dart';
 import '../../../router/route_helper.dart';
 
@@ -13,7 +17,16 @@ part 'onboarding_store.g.dart';
 class OnboardingStore = _OnboardingStore with _$OnboardingStore;
 
 abstract class _OnboardingStore extends BaseStore with Store {
-  _OnboardingStore();
+  _OnboardingStore({
+    FirestoreRepository<FamilyModel>? familyRepository,
+    SharedPreferencesHelper? sharedPreferencesHelper,
+  }) : _familyRepository =
+           familyRepository ?? getIt<FirestoreRepository<FamilyModel>>(),
+       _sharedPreferencesHelper =
+           sharedPreferencesHelper ?? getIt<SharedPreferencesHelper>();
+
+  late final FirestoreRepository<FamilyModel> _familyRepository;
+  late final SharedPreferencesHelper _sharedPreferencesHelper;
 
   final PageController pageController = PageController();
 
@@ -103,6 +116,9 @@ abstract class _OnboardingStore extends BaseStore with Store {
   @observable
   String pincode = '';
 
+  @observable
+  Status submitProfileStatus = Status.initial;
+
   @computed
   bool get isPersonalInfoComplete {
     return name.isNotEmpty &&
@@ -112,41 +128,6 @@ abstract class _OnboardingStore extends BaseStore with Store {
         maritalStatus.isNotEmpty &&
         occupation.isNotEmpty &&
         exactNatureOfDuties.isNotEmpty &&
-        samajName.isNotEmpty &&
-        qualification.isNotEmpty;
-  }
-
-  @computed
-  bool get isContactInfoComplete {
-    return emailId.isNotEmpty &&
-        phoneNumber.isNotEmpty &&
-        alternativeNumber.isNotEmpty &&
-        landlineNumber.isNotEmpty &&
-        socialMediaLink.isNotEmpty;
-  }
-
-  @computed
-  bool get isAddressComplete {
-    return flatNumber.isNotEmpty &&
-        buildingName.isNotEmpty &&
-        streetName.isNotEmpty &&
-        landmark.isNotEmpty &&
-        city.isNotEmpty &&
-        district.isNotEmpty &&
-        state.isNotEmpty &&
-        nativeCity.isNotEmpty &&
-        nativeState.isNotEmpty &&
-        country.isNotEmpty &&
-        pincode.isNotEmpty;
-  }
-
-  @computed
-  bool get isProfileSummaryComplete {
-    return name.isNotEmpty &&
-        age > 0 &&
-        gender != null &&
-        maritalStatus.isNotEmpty &&
-        occupation.isNotEmpty &&
         samajName.isNotEmpty &&
         qualification.isNotEmpty;
   }
@@ -176,6 +157,65 @@ abstract class _OnboardingStore extends BaseStore with Store {
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       ),
+    );
+  }
+
+  @action
+  Future<void> onSubmitProfile() {
+    return tryCatchWrapper(
+      action: () async {
+        submitProfileStatus = Status.loading;
+        final model = getFamilyModel;
+        await _familyRepository.addDocumentWithId(
+          model: model,
+          id: model.memberId,
+        );
+        await _sharedPreferencesHelper.setBasicInfoStateTrue();
+        await _sharedPreferencesHelper.setEmail(emailId);
+        submitProfileStatus = Status.loaded;
+        getIt<RouteHelper>().showAuthGuardScreenAndRemoveEverything();
+      },
+      errorAction: (error) async {
+        submitProfileStatus = Status.error;
+      },
+    );
+  }
+
+  FamilyModel get getFamilyModel {
+    final head = HeadMemberModel(
+      emailId: emailId,
+      age: age,
+      alternativeNumber: alternativeNumber,
+      birthDate: birthDate,
+      bloodGroup: bloodGroup,
+      buildingName: buildingName,
+      city: city,
+      country: country,
+      district: district,
+      exactNatureOfDuties: exactNatureOfDuties,
+      flatNumber: flatNumber,
+      gender: gender?.name,
+      landlineNumber: landlineNumber,
+      landmark: landmark,
+      maritalStatus: maritalStatus,
+      name: name,
+      nativeCity: nativeCity,
+      nativeState: nativeState,
+      occupation: occupation,
+      phoneNumber: phoneNumber,
+      pincode: pincode,
+      qualification: qualification,
+      samajName: samajName,
+      socialMediaLink: socialMediaLink,
+      state: state,
+      streetName: streetName,
+    );
+
+    return FamilyModel(
+      memberId: _sharedPreferencesHelper.getUserId(),
+      head: head,
+      headPhoneNumber: phoneNumber,
+      associatedTemples: head.getAssociatedTemples(),
     );
   }
 }

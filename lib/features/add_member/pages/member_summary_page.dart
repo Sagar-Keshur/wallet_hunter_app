@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/enum/gender_type.dart';
+import '../../../core/enum/state_type.dart';
 import '../../../core/style_guide/style_guide.dart';
 import '../../../core/widgets/widgets.dart';
 import '../store/add_member_store.dart';
@@ -249,20 +250,13 @@ class _MemberSummaryPageState extends State<MemberSummaryPage> {
 
               const SizedBox(height: AppSpacing.spacing4xl),
               Observer(
-                builder: (_) => AppButton(
-                  text: 'Add Member',
-                  onPressed: () async {
-                    // TODO: Implement API call to save family member
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Family member added successfully!'),
-                        backgroundColor: Colors.green,
-                      ),
-                    );
-                    addMemberStore.reset();
-                    Navigator.pop(context);
-                  },
-                ),
+                builder: (_) {
+                  return AppButton(
+                    text: 'Add Member',
+                    onPressed: addMemberStore.onAddMember,
+                    isLoading: addMemberStore.addMemberStatus.isLoading,
+                  );
+                },
               ),
               const SizedBox(height: AppSpacing.spacingLg),
               Center(

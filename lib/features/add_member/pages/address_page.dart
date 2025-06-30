@@ -134,16 +134,86 @@ class _AddressPageState extends State<AddressPage> with ValidationMixin {
                     ),
                     const SizedBox(height: AppSpacing.spacing3xl),
 
-                    // Country
+                    // Flat Number
                     AppTextField(
-                      controller: _countryController,
-                      label: 'Country',
-                      hintText: 'Enter country',
-                      leadingIcon: Icons.public_outlined,
-                      onChanged: _onCountryChanged,
+                      controller: _flatNumberController,
+                      label: 'Flat Number',
+                      hintText: 'Enter flat number (optional)',
+                      leadingIcon: Icons.apartment_outlined,
+                      onChanged: _onFlatNumberChanged,
+                    ),
+                    const SizedBox(height: AppSpacing.spacing2xl),
+
+                    // Door Number
+                    AppTextField(
+                      controller: _doorNumberController,
+                      label: 'Door Number',
+                      hintText: 'Enter door number',
+                      leadingIcon: Icons.home_outlined,
+                      onChanged: _onDoorNumberChanged,
+                    ),
+                    const SizedBox(height: AppSpacing.spacing2xl),
+
+                    // Building Name
+                    AppTextField(
+                      controller: _buildingNameController,
+                      label: 'Building Name',
+                      hintText: 'Enter building name',
+                      leadingIcon: Icons.business_outlined,
+                      onChanged: _onBuildingNameChanged,
+                    ),
+                    const SizedBox(height: AppSpacing.spacing2xl),
+
+                    // Landmark
+                    AppTextField(
+                      controller: _landmarkController,
+                      label: 'Landmark',
+                      hintText: 'Enter landmark (optional)',
+                      leadingIcon: Icons.place_outlined,
+                      onChanged: _onLandmarkChanged,
+                    ),
+                    const SizedBox(height: AppSpacing.spacing2xl),
+
+                    // Street Name
+                    AppTextField(
+                      controller: _streetNameController,
+                      label: 'Street Name',
+                      hintText: 'Enter street name',
+                      leadingIcon: Icons.streetview_outlined,
+                      onChanged: _onStreetNameChanged,
+                    ),
+                    const SizedBox(height: AppSpacing.spacing2xl),
+
+                    // City
+                    AppTextField(
+                      controller: _cityController,
+                      label: 'City',
+                      hintText: 'Enter city',
+                      leadingIcon: Icons.location_city_outlined,
+                      onChanged: _onCityChanged,
                       validator: (value) {
-                        return requiredFieldValidator(value, 'country');
+                        return requiredFieldValidator(value, 'city');
                       },
+                    ),
+                    const SizedBox(height: AppSpacing.spacing2xl),
+                    // Pincode
+                    AppTextField(
+                      controller: _pincodeController,
+                      label: 'Pincode',
+                      hintText: 'Enter pincode',
+                      leadingIcon: Icons.pin_drop_outlined,
+                      onChanged: _onPincodeChanged,
+                      validator: pincodeValidator,
+                      keyboardType: TextInputType.number,
+                    ),
+                    const SizedBox(height: AppSpacing.spacing2xl),
+                    // District
+                    AppTextField(
+                      controller: _districtController,
+                      label: 'District',
+                      hintText: 'Enter district',
+                      leadingIcon: Icons.location_on_outlined,
+                      onChanged: _onDistrictChanged,
                     ),
                     const SizedBox(height: AppSpacing.spacing2xl),
 
@@ -160,89 +230,18 @@ class _AddressPageState extends State<AddressPage> with ValidationMixin {
                     ),
                     const SizedBox(height: AppSpacing.spacing2xl),
 
-                    // District
+                    // Country
                     AppTextField(
-                      controller: _districtController,
-                      label: 'District',
-                      hintText: 'Enter district',
-                      leadingIcon: Icons.location_on_outlined,
-                      onChanged: _onDistrictChanged,
-                    ),
-                    const SizedBox(height: AppSpacing.spacing2xl),
-
-                    // City
-                    AppTextField(
-                      controller: _cityController,
-                      label: 'City',
-                      hintText: 'Enter city',
-                      leadingIcon: Icons.location_city_outlined,
-                      onChanged: _onCityChanged,
+                      controller: _countryController,
+                      label: 'Country',
+                      hintText: 'Enter country',
+                      leadingIcon: Icons.public_outlined,
+                      onChanged: _onCountryChanged,
                       validator: (value) {
-                        return requiredFieldValidator(value, 'city');
+                        return requiredFieldValidator(value, 'country');
                       },
                     ),
                     const SizedBox(height: AppSpacing.spacing2xl),
-
-                    // Street Name
-                    AppTextField(
-                      controller: _streetNameController,
-                      label: 'Street Name',
-                      hintText: 'Enter street name',
-                      leadingIcon: Icons.streetview_outlined,
-                      onChanged: _onStreetNameChanged,
-                    ),
-                    const SizedBox(height: AppSpacing.spacing2xl),
-
-                    // Landmark
-                    AppTextField(
-                      controller: _landmarkController,
-                      label: 'Landmark',
-                      hintText: 'Enter landmark (optional)',
-                      leadingIcon: Icons.place_outlined,
-                      onChanged: _onLandmarkChanged,
-                    ),
-                    const SizedBox(height: AppSpacing.spacing2xl),
-
-                    // Building Name
-                    AppTextField(
-                      controller: _buildingNameController,
-                      label: 'Building Name',
-                      hintText: 'Enter building name',
-                      leadingIcon: Icons.business_outlined,
-                      onChanged: _onBuildingNameChanged,
-                    ),
-                    const SizedBox(height: AppSpacing.spacing2xl),
-
-                    // Door Number
-                    AppTextField(
-                      controller: _doorNumberController,
-                      label: 'Door Number',
-                      hintText: 'Enter door number',
-                      leadingIcon: Icons.home_outlined,
-                      onChanged: _onDoorNumberChanged,
-                    ),
-                    const SizedBox(height: AppSpacing.spacing2xl),
-
-                    // Flat Number
-                    AppTextField(
-                      controller: _flatNumberController,
-                      label: 'Flat Number',
-                      hintText: 'Enter flat number (optional)',
-                      leadingIcon: Icons.apartment_outlined,
-                      onChanged: _onFlatNumberChanged,
-                    ),
-                    const SizedBox(height: AppSpacing.spacing2xl),
-
-                    // Pincode
-                    AppTextField(
-                      controller: _pincodeController,
-                      label: 'Pincode',
-                      hintText: 'Enter pincode',
-                      leadingIcon: Icons.pin_drop_outlined,
-                      onChanged: _onPincodeChanged,
-                      validator: pincodeValidator,
-                      keyboardType: TextInputType.number,
-                    ),
                   ],
                 ),
               ),

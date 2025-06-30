@@ -33,6 +33,11 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
   }
 
   Future<void> _onVerifyPressed() async {
+    // Prevent multiple verification attempts
+    if (authStore.verifyOtpStatus.isLoading) {
+      return;
+    }
+
     FocusScope.of(context).unfocus();
     await authStore.verifyOtp();
   }

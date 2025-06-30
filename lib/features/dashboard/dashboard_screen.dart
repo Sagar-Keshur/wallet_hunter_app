@@ -1,10 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../core/enum/button_type.dart';
+import '../../core/stores/auth_store/auth_store.dart';
 import '../../core/style_guide/style_guide.dart';
 import '../../core/widgets/widgets.dart';
 import '../../dependency_manager/dependency_manager.dart';
 import '../../router/route_helper.dart';
+import 'store/dashboard_store.dart';
 
 class FamilyMember {
   FamilyMember({
@@ -29,6 +34,8 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  late final DashboardStore _dashboardStore;
+
   final List<FamilyMember> _familyMembers = [
     FamilyMember(
       name: 'Mom',
@@ -59,25 +66,33 @@ class _DashboardScreenState extends State<DashboardScreen> {
       color: AppColors.familySuccess,
     ),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _dashboardStore = context.read<DashboardStore>();
+    unawaited(_dashboardStore.getFamilyModel());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bgPrimary,
-      appBar: AppBar(
-        backgroundColor: AppColors.bgPrimary,
-        elevation: 0,
-        leading: AppBackButton(onTap: () async => Navigator.of(context).pop()),
-        title: Text(
-          'Family Members',
-          style: AppStyles.h1.copyWith(color: AppColors.textPrimary),
-        ),
+      appBar: AppAppBar(
+        title: 'Family Members',
         centerTitle: true,
         actions: [
           IconButton(
             onPressed: () {
-              // TODO: Add new family member
+              getIt<RouteHelper>().showAddMemberScreen();
             },
             icon: const Icon(Icons.person_add, color: AppColors.familyPrimary),
+          ),
+          IconButton(
+            onPressed: () {
+              unawaited(context.read<AuthStore>().logout());
+            },
+            icon: const Icon(Icons.logout, color: AppColors.familyPrimary),
           ),
         ],
       ),

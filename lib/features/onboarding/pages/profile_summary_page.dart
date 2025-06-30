@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/enum/gender_type.dart';
+import '../../../core/enum/state_type.dart';
 import '../../../core/style_guide/style_guide.dart';
 import '../../../core/widgets/widgets.dart';
 import '../store/onboarding_store.dart';
@@ -257,7 +258,8 @@ class _ProfileSummaryPageState extends State<ProfileSummaryPage> {
             Observer(
               builder: (_) => AppButton(
                 text: 'Submit Profile',
-                onPressed: _onSubmitProfile,
+                onPressed: onboardingStore.onSubmitProfile,
+                isLoading: onboardingStore.submitProfileStatus.isLoading,
               ),
             ),
             const SizedBox(height: AppSpacing.spacingLg),
@@ -323,20 +325,5 @@ class _ProfileSummaryPageState extends State<ProfileSummaryPage> {
         ],
       ),
     );
-  }
-
-  Future<void> _onSubmitProfile() async {
-    // TODO: Implement profile submission logic
-    // This is where you would typically save the data to your backend
-    // For now, we'll just show a success message
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Profile submitted successfully!'),
-        backgroundColor: Colors.green,
-      ),
-    );
-
-    // Navigate to dashboard or next screen
-    // getIt<RouteHelper>().showDashboardScreen();
   }
 }

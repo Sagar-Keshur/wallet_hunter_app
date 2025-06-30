@@ -650,15 +650,13 @@ class _PersonalInfoPageState extends State<PersonalInfoPage>
                 ),
               ),
               const SizedBox(height: AppSpacing.spacing4xl),
-              Observer(
-                builder: (_) => AppButton(
-                  text: 'Continue',
-                  onPressed: () async {
-                    if (_formKey.currentState?.validate() ?? false) {
-                      addMemberStore.onNextPage();
-                    }
-                  },
-                ),
+              AppButton(
+                text: 'Continue',
+                onPressed: () async {
+                  if (_formKey.currentState?.validate() ?? false) {
+                    addMemberStore.onNextPage();
+                  }
+                },
               ),
               const SizedBox(height: AppSpacing.spacingLg),
               Center(

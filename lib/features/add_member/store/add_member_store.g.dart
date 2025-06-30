@@ -9,45 +9,6 @@ part of 'add_member_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$AddMemberStore on _AddMemberStore, Store {
-  Computed<bool>? _$isPersonalInfoCompleteComputed;
-
-  @override
-  bool get isPersonalInfoComplete =>
-      (_$isPersonalInfoCompleteComputed ??= Computed<bool>(
-        () => super.isPersonalInfoComplete,
-        name: '_AddMemberStore.isPersonalInfoComplete',
-      )).value;
-  Computed<bool>? _$isContactInfoCompleteComputed;
-
-  @override
-  bool get isContactInfoComplete =>
-      (_$isContactInfoCompleteComputed ??= Computed<bool>(
-        () => super.isContactInfoComplete,
-        name: '_AddMemberStore.isContactInfoComplete',
-      )).value;
-  Computed<bool>? _$isAddressCompleteComputed;
-
-  @override
-  bool get isAddressComplete => (_$isAddressCompleteComputed ??= Computed<bool>(
-    () => super.isAddressComplete,
-    name: '_AddMemberStore.isAddressComplete',
-  )).value;
-  Computed<bool>? _$isNativePlaceCompleteComputed;
-
-  @override
-  bool get isNativePlaceComplete =>
-      (_$isNativePlaceCompleteComputed ??= Computed<bool>(
-        () => super.isNativePlaceComplete,
-        name: '_AddMemberStore.isNativePlaceComplete',
-      )).value;
-  Computed<bool>? _$isFormCompleteComputed;
-
-  @override
-  bool get isFormComplete => (_$isFormCompleteComputed ??= Computed<bool>(
-    () => super.isFormComplete,
-    name: '_AddMemberStore.isFormComplete',
-  )).value;
-
   late final _$currentPageAtom = Atom(
     name: '_AddMemberStore.currentPage',
     context: context,
@@ -604,6 +565,34 @@ mixin _$AddMemberStore on _AddMemberStore, Store {
     });
   }
 
+  late final _$addMemberStatusAtom = Atom(
+    name: '_AddMemberStore.addMemberStatus',
+    context: context,
+  );
+
+  @override
+  Status get addMemberStatus {
+    _$addMemberStatusAtom.reportRead();
+    return super.addMemberStatus;
+  }
+
+  @override
+  set addMemberStatus(Status value) {
+    _$addMemberStatusAtom.reportWrite(value, super.addMemberStatus, () {
+      super.addMemberStatus = value;
+    });
+  }
+
+  late final _$onAddMemberAsyncAction = AsyncAction(
+    '_AddMemberStore.onAddMember',
+    context: context,
+  );
+
+  @override
+  Future<void> onAddMember() {
+    return _$onAddMemberAsyncAction.run(() => super.onAddMember());
+  }
+
   late final _$_AddMemberStoreActionController = ActionController(
     name: '_AddMemberStore',
     context: context,
@@ -634,12 +623,12 @@ mixin _$AddMemberStore on _AddMemberStore, Store {
   }
 
   @override
-  void reset() {
+  Future<String?> uploadPhoto() {
     final _$actionInfo = _$_AddMemberStoreActionController.startAction(
-      name: '_AddMemberStore.reset',
+      name: '_AddMemberStore.uploadPhoto',
     );
     try {
-      return super.reset();
+      return super.uploadPhoto();
     } finally {
       _$_AddMemberStoreActionController.endAction(_$actionInfo);
     }
@@ -679,11 +668,7 @@ flatNumber: ${flatNumber},
 pincode: ${pincode},
 nativeCity: ${nativeCity},
 nativeState: ${nativeState},
-isPersonalInfoComplete: ${isPersonalInfoComplete},
-isContactInfoComplete: ${isContactInfoComplete},
-isAddressComplete: ${isAddressComplete},
-isNativePlaceComplete: ${isNativePlaceComplete},
-isFormComplete: ${isFormComplete}
+addMemberStatus: ${addMemberStatus}
     ''';
   }
 }

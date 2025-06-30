@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../core/style_guide/style_guide.dart';
 import '../../core/widgets/widgets.dart';
+import '../dashboard/store/dashboard_store.dart';
 import 'pages/address_page.dart';
 import 'pages/contact_info_page.dart';
 import 'pages/member_summary_page.dart';
@@ -17,7 +18,15 @@ class AddMemberScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [Provider<AddMemberStore>(create: (_) => AddMemberStore())],
+      providers: [
+        Provider<AddMemberStore>(
+          create: (_) {
+            return AddMemberStore(
+              dashboardStore: context.read<DashboardStore>(),
+            );
+          },
+        ),
+      ],
       child: const _AddMemberScreenImpl(),
     );
   }

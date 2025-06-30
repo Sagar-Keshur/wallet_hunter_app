@@ -10,6 +10,7 @@ class SharedPreferencesHelper {
 
   static const String _userId = 'userId';
   static const String _email = 'email';
+  static const String _mobileNumber = 'mobileNumber';
   static const String _loginState = 'loginState';
   static const String _basicInfo = 'basicInfo';
 
@@ -54,6 +55,14 @@ class SharedPreferencesHelper {
 
   bool getBasicInfoState() {
     return _sharedPreferences.getBool(_basicInfo) ?? false;
+  }
+
+  String getMobileNumber() {
+    return _sharedPreferences.getString(_mobileNumber) ?? '';
+  }
+
+  Future<void> setMobileNumber(String mobileNumber) async {
+    await _sharedPreferences.setString(_mobileNumber, mobileNumber);
   }
 
   Future<void> clearAll() async {

@@ -108,6 +108,7 @@ class _NativePlacePageState extends State<NativePlacePage>
               builder: (_) => AppButton(
                 text: 'Continue',
                 onPressed: () async {
+                  FocusScope.of(context).unfocus();
                   if (_formKey.currentState?.validate() ?? false) {
                     addMemberStore.onNextPage();
                   }

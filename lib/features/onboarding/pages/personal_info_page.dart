@@ -48,6 +48,14 @@ class _PersonalInfoPageState extends State<PersonalInfoPage>
     'O-',
   ];
 
+  final List<String> _samajNameOptions = [
+    'Brahmin',
+    'Kshatriya',
+    'Vaishya',
+    'Shudra',
+    'Other',
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -299,9 +307,11 @@ class _PersonalInfoPageState extends State<PersonalInfoPage>
                     AppTextField(
                       controller: _samajNameController,
                       label: 'Samaj Name',
-                      hintText: 'Enter your samaj name',
+                      hintText: 'Select your samaj name',
                       leadingIcon: Icons.group_outlined,
                       onChanged: _onSamajNameChanged,
+                      onTap: _showSamajNamePicker,
+                      readOnly: true,
                       validator: (value) =>
                           requiredFieldValidator(value, 'samaj name'),
                     ),
@@ -477,6 +487,78 @@ class _PersonalInfoPageState extends State<PersonalInfoPage>
                   onTap: () {
                     _bloodGroupController.text = e;
                     _onBloodGroupChanged(e);
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.spacingLg,
+                      vertical: AppSpacing.spacingMd,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.bgTertiary,
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusNormal,
+                      ),
+                      border: Border.all(color: AppColors.borderDisabled),
+                    ),
+                    child: Text(
+                      e,
+                      style: AppStyles.p1.copyWith(
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: AppSpacing.spacingLg),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _showSamajNamePicker() async {
+    await showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.bgSecondary,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppSpacing.radiusRound),
+        ),
+      ),
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(AppSpacing.spacing2xl),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text(
+                  'Select Samaj Name',
+                  style: AppStyles.h2.copyWith(
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const Spacer(),
+                IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(Icons.close),
+                  color: AppColors.textSecondary,
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.spacingLg),
+            Wrap(
+              spacing: AppSpacing.spacingMd,
+              runSpacing: AppSpacing.spacingMd,
+              children: _samajNameOptions.map((e) {
+                return InkWell(
+                  onTap: () {
+                    _samajNameController.text = e;
+                    _onSamajNameChanged(e);
                     Navigator.pop(context);
                   },
                   child: Container(

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../core/stores/app_store/app_store.dart';
 import '../core/stores/auth_store/auth_store.dart';
+import '../features/dashboard/store/dashboard_store.dart';
 
 class AppDependencyProvider extends StatelessWidget {
   const AppDependencyProvider({
@@ -20,6 +21,7 @@ class AppDependencyProvider extends StatelessWidget {
       providers: [
         Provider<AppStore>.value(value: appStore),
         Provider<AuthStore>.value(value: AuthStore()),
+        Provider<DashboardStore>.value(value: DashboardStore()),
       ],
       child: child,
     );

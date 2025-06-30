@@ -17,29 +17,6 @@ mixin _$OnboardingStore on _OnboardingStore, Store {
         () => super.isPersonalInfoComplete,
         name: '_OnboardingStore.isPersonalInfoComplete',
       )).value;
-  Computed<bool>? _$isContactInfoCompleteComputed;
-
-  @override
-  bool get isContactInfoComplete =>
-      (_$isContactInfoCompleteComputed ??= Computed<bool>(
-        () => super.isContactInfoComplete,
-        name: '_OnboardingStore.isContactInfoComplete',
-      )).value;
-  Computed<bool>? _$isAddressCompleteComputed;
-
-  @override
-  bool get isAddressComplete => (_$isAddressCompleteComputed ??= Computed<bool>(
-    () => super.isAddressComplete,
-    name: '_OnboardingStore.isAddressComplete',
-  )).value;
-  Computed<bool>? _$isProfileSummaryCompleteComputed;
-
-  @override
-  bool get isProfileSummaryComplete =>
-      (_$isProfileSummaryCompleteComputed ??= Computed<bool>(
-        () => super.isProfileSummaryComplete,
-        name: '_OnboardingStore.isProfileSummaryComplete',
-      )).value;
 
   late final _$currentPageAtom = Atom(
     name: '_OnboardingStore.currentPage',
@@ -518,6 +495,24 @@ mixin _$OnboardingStore on _OnboardingStore, Store {
     });
   }
 
+  late final _$submitProfileStatusAtom = Atom(
+    name: '_OnboardingStore.submitProfileStatus',
+    context: context,
+  );
+
+  @override
+  Status get submitProfileStatus {
+    _$submitProfileStatusAtom.reportRead();
+    return super.submitProfileStatus;
+  }
+
+  @override
+  set submitProfileStatus(Status value) {
+    _$submitProfileStatusAtom.reportWrite(value, super.submitProfileStatus, () {
+      super.submitProfileStatus = value;
+    });
+  }
+
   late final _$_OnboardingStoreActionController = ActionController(
     name: '_OnboardingStore',
     context: context,
@@ -542,6 +537,18 @@ mixin _$OnboardingStore on _OnboardingStore, Store {
     );
     try {
       return super.onPreviousPage();
+    } finally {
+      _$_OnboardingStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  Future<void> onSubmitProfile() {
+    final _$actionInfo = _$_OnboardingStoreActionController.startAction(
+      name: '_OnboardingStore.onSubmitProfile',
+    );
+    try {
+      return super.onSubmitProfile();
     } finally {
       _$_OnboardingStoreActionController.endAction(_$actionInfo);
     }
@@ -577,10 +584,8 @@ nativeCity: ${nativeCity},
 nativeState: ${nativeState},
 country: ${country},
 pincode: ${pincode},
-isPersonalInfoComplete: ${isPersonalInfoComplete},
-isContactInfoComplete: ${isContactInfoComplete},
-isAddressComplete: ${isAddressComplete},
-isProfileSummaryComplete: ${isProfileSummaryComplete}
+submitProfileStatus: ${submitProfileStatus},
+isPersonalInfoComplete: ${isPersonalInfoComplete}
     ''';
   }
 }

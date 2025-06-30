@@ -3,8 +3,11 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/stores/auth_store/auth_store.dart';
+import '../../core/utils/shared_preferences_helper.dart';
+import '../../dependency_manager/dependency_manager.dart';
 import '../Authentication/authentication_screen.dart';
 import '../dashboard/dashboard_screen.dart';
+import '../onboarding/onboarding_screen.dart';
 
 class AuthGuardScreen extends StatefulWidget {
   const AuthGuardScreen({super.key});
@@ -15,10 +18,14 @@ class AuthGuardScreen extends StatefulWidget {
 
 class _AuthGuardScreenState extends State<AuthGuardScreen> {
   late final AuthStore authStore;
+  late final SharedPreferencesHelper sharedPreferencesHelper;
+  late final bool isOnboardingCompleted;
 
   @override
   void initState() {
     authStore = context.read<AuthStore>();
+    sharedPreferencesHelper = getIt<SharedPreferencesHelper>();
+    isOnboardingCompleted = sharedPreferencesHelper.getBasicInfoState();
     super.initState();
   }
 
@@ -26,10 +33,13 @@ class _AuthGuardScreenState extends State<AuthGuardScreen> {
   Widget build(BuildContext context) {
     return Observer(
       builder: (context) {
-        if (authStore.isLoggedIn) {
+        if (!authStore.isLoggedIn) {
+          return const AuthenticationScreen();
+        }
+        if (isOnboardingCompleted) {
           return const DashboardScreen();
         } else {
-          return const AuthenticationScreen();
+          return const OnboardingScreen();
         }
       },
     );

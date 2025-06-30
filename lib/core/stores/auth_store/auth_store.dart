@@ -9,6 +9,8 @@ import '../../../dependency_manager/dependency_manager.dart';
 import '../../../router/route_helper.dart';
 import '../../enum/state_type.dart';
 import '../../exceptions/app_exception.dart';
+import '../../models/family_model/family_model.dart';
+import '../../utils/api_helper.dart';
 import '../../utils/constants.dart';
 import '../../utils/shared_preferences_helper.dart';
 import '../base_store/base_store.dart';
@@ -21,14 +23,18 @@ abstract class _AuthStore extends BaseStore with Store {
   _AuthStore({
     FirebaseAuth? firebaseAuth,
     SharedPreferencesHelper? sharedPreferencesHelper,
+    FirestoreRepository<FamilyModel>? familyRepository,
   }) : _firebaseAuth = firebaseAuth ?? getIt<FirebaseAuth>(),
        _sharedPreferencesHelper =
-           sharedPreferencesHelper ?? getIt<SharedPreferencesHelper>() {
+           sharedPreferencesHelper ?? getIt<SharedPreferencesHelper>(),
+       _familyRepository =
+           familyRepository ?? getIt<FirestoreRepository<FamilyModel>>() {
     _initAuthState();
   }
 
-  final FirebaseAuth _firebaseAuth;
-  final SharedPreferencesHelper _sharedPreferencesHelper;
+  late final FirebaseAuth _firebaseAuth;
+  late final SharedPreferencesHelper _sharedPreferencesHelper;
+  late final FirestoreRepository<FamilyModel> _familyRepository;
   final Logger _logger = getIt<Logger>();
 
   PageController pageController = PageController();
@@ -107,21 +113,50 @@ abstract class _AuthStore extends BaseStore with Store {
 
   @action
   void _validateOtp() {
-    if (otpCode.isEmpty) {
+    if (otpCode.length != 6) {
       throw AppException(message: 'Please enter a valid 6-digit OTP');
     }
-    if (otpCode.length != 6) {
-      throw AppException(message: 'Please enter a complete 6-digit OTP');
-    }
+  }
+
+  @action
+  void _validateVerificationId() {
     if (verificationId.isEmpty) {
+      _logger.e('Verification ID is empty');
       throw AppException(
-        message: 'Verification session expired. Please try again.',
+        message: 'Verification session expired. Please request a new OTP.',
+      );
+    }
+
+    if (verificationId.length < 50) {
+      _logger.e(
+        'Verification ID seems invalid: ${verificationId.length} characters',
+      );
+      throw AppException(
+        message: 'Invalid verification session. Please request a new OTP.',
       );
     }
   }
 
   @action
+  void _resetVerificationState() {
+    verificationId = '';
+    otpCode = '';
+    isOtpSent = false;
+    verifyOtpStatus = Status.initial;
+  }
+
+  @action
   void _validateMobileNumber() {
+    if (mobileNumber.isEmpty) {
+      throw AppException(message: 'Please enter your mobile number');
+    }
+
+    if (mobileNumber.length != 10) {
+      throw AppException(
+        message: 'Please enter a valid 10-digit mobile number',
+      );
+    }
+
     final mobileRegex = RegExp(r'^[6-9]\d{9}$');
     if (!mobileRegex.hasMatch(mobileNumber)) {
       throw AppException(
@@ -185,6 +220,12 @@ abstract class _AuthStore extends BaseStore with Store {
       return;
     }
 
+    // Prevent multiple verification attempts
+    if (verifyOtpStatus.isLoading) {
+      _logger.d('OTP verification already in progress');
+      return;
+    }
+
     await tryCatchWrapper(
       action: () async {
         verifyOtpStatus = Status.loading;
@@ -198,6 +239,7 @@ abstract class _AuthStore extends BaseStore with Store {
 
         // Validate OTP before proceeding
         _validateOtp();
+        _validateVerificationId();
 
         // Additional safety check
         if (otpCode.isEmpty || verificationId.isEmpty) {
@@ -222,14 +264,40 @@ abstract class _AuthStore extends BaseStore with Store {
         }
         await _sharedPreferencesHelper.setUserId(result.user!.uid);
         await _sharedPreferencesHelper.setLoginStateTrue();
-        // TODO(Sagar): Add family head logic hear if exits then show dashboard else show onboarding
+        await _sharedPreferencesHelper.setMobileNumber(mobileNumber);
+        final familyModel = await _familyRepository.getDocumentById(
+          result.user!.uid,
+        );
+        if (familyModel != null) {
+          await _sharedPreferencesHelper.setBasicInfoStateTrue();
+          await _sharedPreferencesHelper.setEmail(
+            familyModel.head.emailId ?? '',
+          );
+        } else {
+          final familyModel = await _familyRepository
+              .getFamilyModelByMobileNumber(mobileNumber);
+          if (familyModel != null) {
+            await _sharedPreferencesHelper.setBasicInfoStateTrue();
+            await _sharedPreferencesHelper.setEmail(
+              familyModel.head.emailId ?? '',
+            );
+          }
+        }
         verifyOtpStatus = Status.loaded;
         _logger.d('OTP verification successful');
-        getIt<RouteHelper>().showOnboardingScreen();
+        isLoggedIn = true;
+        getIt<RouteHelper>().showAuthGuardScreenAndRemoveEverything();
       },
       errorAction: (error) async {
         verifyOtpStatus = Status.error;
         _logger.e('OTP verification failed: $error');
+
+        // Reset verification state on error
+        if (error.toString().contains('Given String is empty or null') ||
+            error.toString().contains('verificationId')) {
+          _logger.e('Verification ID error detected, resetting state');
+          _resetVerificationState();
+        }
       },
     );
   }
@@ -244,7 +312,17 @@ abstract class _AuthStore extends BaseStore with Store {
     await tryCatchWrapper(
       action: () async {
         resendOtpStatus = Status.loading;
+
+        // Validate mobile number before resending
+        _validateMobileNumber();
+
         final phoneNumber = '+91$mobileNumber';
+
+        // Validate phone number format
+        if (phoneNumber.length != 13 || !phoneNumber.startsWith('+91')) {
+          throw AppException(message: 'Invalid phone number format');
+        }
+
         await _firebaseAuth.verifyPhoneNumber(
           phoneNumber: phoneNumber,
           verificationCompleted: (phoneAuthCredential) {
@@ -252,8 +330,22 @@ abstract class _AuthStore extends BaseStore with Store {
             resendOtpStatus = Status.error;
           },
           verificationFailed: (e) {
-            _logger.d('verificationFailed $e');
+            _logger.d('verificationFailed ${e.message}');
             resendOtpStatus = Status.error;
+            // Show user-friendly error message
+            if (e.message?.contains('invalid') ?? false) {
+              throw AppException(
+                message: 'Invalid phone number. Please check and try again.',
+              );
+            } else if (e.message?.contains('quota') ?? false) {
+              throw AppException(
+                message: 'Too many attempts. Please try again later.',
+              );
+            } else {
+              throw AppException(
+                message: 'Failed to resend OTP. Please try again.',
+              );
+            }
           },
           codeSent: (verificationId, resendToken) {
             _logger.d('codeSent');
@@ -272,6 +364,7 @@ abstract class _AuthStore extends BaseStore with Store {
       },
       errorAction: (error) async {
         resendOtpStatus = Status.error;
+        _logger.e('Resend OTP failed: $error');
       },
     );
   }
@@ -328,6 +421,7 @@ abstract class _AuthStore extends BaseStore with Store {
   Future<void> logout() async {
     await tryCatchWrapper(
       action: () async {
+        await _sharedPreferencesHelper.clearAll();
         isLoggedIn = false;
         getIt<RouteHelper>().showAuthGuardScreenAndRemoveEverything();
         await _firebaseAuth.signOut();

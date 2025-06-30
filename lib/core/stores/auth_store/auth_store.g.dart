@@ -301,6 +301,30 @@ mixin _$AuthStore on _AuthStore, Store {
   }
 
   @override
+  void _validateVerificationId() {
+    final _$actionInfo = _$_AuthStoreActionController.startAction(
+      name: '_AuthStore._validateVerificationId',
+    );
+    try {
+      return super._validateVerificationId();
+    } finally {
+      _$_AuthStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void _resetVerificationState() {
+    final _$actionInfo = _$_AuthStoreActionController.startAction(
+      name: '_AuthStore._resetVerificationState',
+    );
+    try {
+      return super._resetVerificationState();
+    } finally {
+      _$_AuthStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void _validateMobileNumber() {
     final _$actionInfo = _$_AuthStoreActionController.startAction(
       name: '_AuthStore._validateMobileNumber',

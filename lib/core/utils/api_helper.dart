@@ -8,6 +8,7 @@ import '../../dependency_manager/dependency_manager.dart';
 import '../exceptions/app_exception.dart';
 import '../exceptions/no_internet_exception.dart';
 import '../models/base_model/base_model.dart';
+import '../models/family_model/family_model.dart';
 import '../services/network/network_info.dart';
 
 class FirestoreHelper {
@@ -69,7 +70,7 @@ class FirestoreRepository<T extends BaseModel> {
   final Map<String, Object?> Function(T model) toFirestore;
   final FirestoreHelper _firestoreHelper;
 
-  Future<T?> getDocumentById(String id, {bool updateKeys = false}) {
+  Future<T?> getDocumentById(String id) {
     return _firestoreHelper.safeFirestoreCall(() async {
       debugPrint('$collectionPath | Getting document by id: $id');
       final docSnapshot = await _collectionRef.doc(id).get();
@@ -132,6 +133,20 @@ class FirestoreRepository<T extends BaseModel> {
           .get();
       debugPrint('Query snapshot: ${querySnapshot.docs}');
       return querySnapshot.docs.map(fromFirestore).toList();
+    });
+  }
+
+  Future<FamilyModel?> getFamilyModelByMobileNumber(String mobileNumber) {
+    return _firestoreHelper.safeFirestoreCall(() async {
+      debugPrint(
+        '$collectionPath | Getting family model by mobile number: $mobileNumber',
+      );
+      final querySnapshot = await _collectionRef
+          .where('familyMemberPhoneNumbers', arrayContains: mobileNumber)
+          .get();
+      debugPrint('Query snapshot: ${querySnapshot.docs}');
+      return querySnapshot.docs.map(fromFirestore).toList().firstOrNull
+          as FamilyModel?;
     });
   }
 }

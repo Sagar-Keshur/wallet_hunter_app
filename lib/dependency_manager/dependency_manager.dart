@@ -1,14 +1,17 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../core/models/family_model/family_model.dart';
 import '../core/services/network/data_connection_checker.dart';
 import '../core/services/network/network_info.dart';
 import '../core/utils/api_helper.dart';
@@ -35,8 +38,10 @@ class DependencyManager {
     // Firebase
     provideFirebaseApp();
     provideFirebaseAuth();
+    provideFirebaseFirestore();
     provideFirebaseCrashlytics();
     provideFirebaseAnalytics();
+    provideFirebaseStorage();
 
     // Utils
     provideLogger();
@@ -50,7 +55,7 @@ class DependencyManager {
     provideSharedPreferencesHelper();
 
     // Repositories
-    // provideAuthenticationRepository();
+    provideFamilyRepository();
   }
 
   bool initialized = false;
@@ -113,6 +118,23 @@ class DependencyManager {
     });
   }
 
+  void provideFirebaseFirestore() {
+    getIt.registerSingletonAsync<FirebaseFirestore>(() async {
+      await getIt.ensureReady<NetworkInfo>();
+      await getIt.ensureReady<FirebaseApp>();
+      final firestore = FirebaseFirestore.instance;
+      return firestore;
+    });
+  }
+
+  void provideFirebaseStorage() {
+    getIt.registerSingletonAsync<FirebaseStorage>(() async {
+      await getIt.ensureReady<FirebaseApp>();
+      final storage = FirebaseStorage.instance;
+      return storage;
+    });
+  }
+
   void provideLogger() {
     getIt.registerLazySingletonAsync<Logger>(
       () async => Logger(printer: AppLogPrinter()),
@@ -152,11 +174,19 @@ class DependencyManager {
     });
   }
 
-  // void provideAuthenticationRepository() {
-  //   getIt.registerSingletonAsync<AuthenticationRepository>(() async {
-  //     await getIt.ensureReady<FirebaseAuth>();
-  //     await getIt.ensureReady<FirestoreHelper>();
-  //     return AuthenticationRepositoryImpl();
-  //   });
-  // }
+  // Repositories
+  void provideFamilyRepository() {
+    getIt.registerSingletonAsync<FirestoreRepository<FamilyModel>>(() async {
+      await getIt.ensureReady<NetworkInfo>();
+      await getIt.ensureReady<FirestoreHelper>();
+      await getIt.ensureReady<FirebaseFirestore>();
+      return FirestoreRepository<FamilyModel>(
+        collectionPath: 'Family',
+        fromFirestore: (snapshot) {
+          return FamilyModel.fromJson(snapshot.data()! as Map<String, dynamic>);
+        },
+        toFirestore: (value) => value.toJson(),
+      );
+    });
+  }
 }
