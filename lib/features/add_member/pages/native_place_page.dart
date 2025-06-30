@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/style_guide/style_guide.dart';
+import '../../../core/utils/snackbar_utils.dart';
 import '../../../core/utils/validation_mixin.dart';
 import '../../../core/widgets/widgets.dart';
 import '../store/add_member_store.dart';
@@ -111,7 +112,11 @@ class _NativePlacePageState extends State<NativePlacePage>
                   FocusScope.of(context).unfocus();
                   if (_formKey.currentState?.validate() ?? false) {
                     addMemberStore.onNextPage();
+                    return;
                   }
+                  SnackbarUtils.showErrorSnackBar(
+                    'Please fill all required fields',
+                  );
                 },
               ),
             ),

@@ -115,26 +115,28 @@ class AppRemoveMemberDialog extends StatelessWidget {
       insetPadding: const EdgeInsets.symmetric(horizontal: 30),
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.black,
+          color: AppColors.bgPrimary,
           borderRadius: BorderRadius.circular(32),
         ),
         width: context.width,
-        padding: const EdgeInsets.symmetric(vertical: 100, horizontal: 30),
+        padding: const EdgeInsets.symmetric(
+          vertical: AppSpacing.spacing4xl,
+          horizontal: AppSpacing.spacing4xl,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
+            Text(
               'Are you sure you want to remove this member?',
-              style: AppStyles.h6,
+              style: AppStyles.h6.copyWith(color: AppColors.textPrimary),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: AppSpacing.spacing4xl),
             AppButton(
               text: 'Delete',
-              buttonType: ButtonType.delete,
               onPressed: () async => getIt<RouteHelper>().pop(true),
             ),
-            const SizedBox(height: AppSpacing.spacing4xl),
+            const SizedBox(height: AppSpacing.spacingXl),
             InkWell(
               onTap: () => getIt<RouteHelper>().pop(false),
               child: const Text('Go Back', style: AppStyles.b3),

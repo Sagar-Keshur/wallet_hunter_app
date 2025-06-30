@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/enum/gender_type.dart';
 import '../../../core/style_guide/style_guide.dart';
+import '../../../core/utils/snackbar_utils.dart';
 import '../../../core/utils/validation_mixin.dart';
 import '../../../core/widgets/widgets.dart';
 import '../store/onboarding_store.dart';
@@ -337,9 +338,12 @@ class _PersonalInfoPageState extends State<PersonalInfoPage>
                   onPressed: () async {
                     if (_formKey.currentState?.validate() ?? false) {
                       onboardingStore.onNextPage();
+                      return;
                     }
+                    SnackbarUtils.showErrorSnackBar(
+                      'Please fill all required fields',
+                    );
                   },
-                  // isDisabled: !onboardingStore.isPersonalInfoComplete,
                 ),
               ),
               const SizedBox(height: AppSpacing.spacingLg),

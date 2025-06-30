@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/style_guide/style_guide.dart';
+import '../../../core/utils/snackbar_utils.dart';
 import '../../../core/utils/validation_mixin.dart';
 import '../../../core/widgets/widgets.dart';
 import '../store/add_member_store.dart';
@@ -130,7 +131,6 @@ class _ContactInfoPageState extends State<ContactInfoPage>
                       hintText: 'Enter landline number (optional)',
                       leadingIcon: Icons.phone_outlined,
                       onChanged: _onLandlineNumberChanged,
-                      validator: landlineValidator,
                       keyboardType: TextInputType.phone,
                     ),
                     const SizedBox(height: AppSpacing.spacing2xl),
@@ -154,7 +154,6 @@ class _ContactInfoPageState extends State<ContactInfoPage>
                       hintText: 'Enter social media profile link (optional)',
                       leadingIcon: Icons.link_outlined,
                       onChanged: _onSocialMediaLinkChanged,
-                      validator: urlValidator,
                       keyboardType: TextInputType.url,
                     ),
                   ],
@@ -167,7 +166,11 @@ class _ContactInfoPageState extends State<ContactInfoPage>
                   onPressed: () async {
                     if (_formKey.currentState?.validate() ?? false) {
                       addMemberStore.onNextPage();
+                      return;
                     }
+                    SnackbarUtils.showErrorSnackBar(
+                      'Please fill all required fields',
+                    );
                   },
                 ),
               ),

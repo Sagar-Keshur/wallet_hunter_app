@@ -45,6 +45,24 @@ mixin _$DashboardStore on _DashboardStoreBase, Store {
     });
   }
 
+  late final _$currentPageIndexAtom = Atom(
+    name: '_DashboardStoreBase.currentPageIndex',
+    context: context,
+  );
+
+  @override
+  int get currentPageIndex {
+    _$currentPageIndexAtom.reportRead();
+    return super.currentPageIndex;
+  }
+
+  @override
+  set currentPageIndex(int value) {
+    _$currentPageIndexAtom.reportWrite(value, super.currentPageIndex, () {
+      super.currentPageIndex = value;
+    });
+  }
+
   late final _$_DashboardStoreBaseActionController = ActionController(
     name: '_DashboardStoreBase',
     context: context,
@@ -63,10 +81,23 @@ mixin _$DashboardStore on _DashboardStoreBase, Store {
   }
 
   @override
+  Future<void> deleteMember(String memberId) {
+    final _$actionInfo = _$_DashboardStoreBaseActionController.startAction(
+      name: '_DashboardStoreBase.deleteMember',
+    );
+    try {
+      return super.deleteMember(memberId);
+    } finally {
+      _$_DashboardStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 familyModel: ${familyModel},
-isFamilyHead: ${isFamilyHead}
+isFamilyHead: ${isFamilyHead},
+currentPageIndex: ${currentPageIndex}
     ''';
   }
 }

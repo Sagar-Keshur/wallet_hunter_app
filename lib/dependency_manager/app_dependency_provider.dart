@@ -20,8 +20,8 @@ class AppDependencyProvider extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider<AppStore>.value(value: appStore),
-        Provider<AuthStore>.value(value: AuthStore()),
-        Provider<DashboardStore>.value(value: DashboardStore()),
+        Provider<AuthStore>(create: (_) => AuthStore()),
+        Provider<DashboardStore>(create: (_) => DashboardStore()),
       ],
       child: child,
     );

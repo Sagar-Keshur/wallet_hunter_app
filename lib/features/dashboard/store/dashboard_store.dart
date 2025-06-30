@@ -34,6 +34,12 @@ abstract class _DashboardStoreBase extends BaseStore with Store {
   @observable
   bool isFamilyHead = false;
 
+  @observable
+  int currentPageIndex = 0;
+
+  @observable
+  bool isFamilyTreeExporting = false;
+
   @action
   Future<void> getFamilyModel() {
     return tryCatchWrapper(
@@ -47,9 +53,60 @@ abstract class _DashboardStoreBase extends BaseStore with Store {
           );
           familyModel = result;
         }
+
+        // Determine if current user is family head
+        if (familyModel != null) {
+          isFamilyHead = familyModel!.headPhoneNumber == mobileNumber;
+        }
       },
       errorAction: (error) async {
         unawaited(SnackbarUtils.currentState.read<AuthStore>().logout());
+      },
+    );
+  }
+
+  @action
+  Future<void> deleteMember(String memberId) {
+    return tryCatchWrapper(
+      action: () async {
+        if (familyModel == null) {
+          throw Exception('Family model not found');
+        }
+
+        if (!isFamilyHead) {
+          throw Exception('Only family head can delete members');
+        }
+
+        final member = familyModel!.members.firstWhere(
+          (member) => member.id == memberId,
+        );
+
+        final updatedMembers = familyModel!.members
+            .where((member) => member.id != memberId)
+            .toList();
+
+        final familyMemberPhoneNumbers = familyModel!.familyMemberPhoneNumbers
+            .where((phoneNumber) => phoneNumber != memberId)
+            .toList();
+
+        final updatedFamilyModel = familyModel!.copyWith(
+          members: updatedMembers,
+          familyMemberPhoneNumbers: familyMemberPhoneNumbers,
+        );
+
+        await _familyRepository.updateDocument(
+          id: familyModel!.memberId,
+          model: updatedFamilyModel,
+        );
+
+        familyModel = updatedFamilyModel;
+
+        SnackbarUtils.showSuccessSnackBar(
+          '${member.firstName} ${member.lastName} has been removed from the family!',
+        );
+      },
+      errorAction: (error) async {
+        SnackbarUtils.showErrorSnackBar('Failed to delete member');
       },
     );
   }

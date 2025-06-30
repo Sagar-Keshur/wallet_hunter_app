@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/style_guide/style_guide.dart';
+import '../../../core/utils/snackbar_utils.dart';
 import '../../../core/utils/validation_mixin.dart';
 import '../../../core/widgets/widgets.dart';
 import '../store/add_member_store.dart';
@@ -151,6 +152,9 @@ class _AddressPageState extends State<AddressPage> with ValidationMixin {
                       hintText: 'Enter door number',
                       leadingIcon: Icons.home_outlined,
                       onChanged: _onDoorNumberChanged,
+                      validator: (value) {
+                        return requiredFieldValidator(value, 'door number');
+                      },
                     ),
                     const SizedBox(height: AppSpacing.spacing2xl),
 
@@ -161,6 +165,9 @@ class _AddressPageState extends State<AddressPage> with ValidationMixin {
                       hintText: 'Enter building name',
                       leadingIcon: Icons.business_outlined,
                       onChanged: _onBuildingNameChanged,
+                      validator: (value) {
+                        return requiredFieldValidator(value, 'building name');
+                      },
                     ),
                     const SizedBox(height: AppSpacing.spacing2xl),
 
@@ -181,6 +188,9 @@ class _AddressPageState extends State<AddressPage> with ValidationMixin {
                       hintText: 'Enter street name',
                       leadingIcon: Icons.streetview_outlined,
                       onChanged: _onStreetNameChanged,
+                      validator: (value) {
+                        return requiredFieldValidator(value, 'street name');
+                      },
                     ),
                     const SizedBox(height: AppSpacing.spacing2xl),
 
@@ -214,6 +224,9 @@ class _AddressPageState extends State<AddressPage> with ValidationMixin {
                       hintText: 'Enter district',
                       leadingIcon: Icons.location_on_outlined,
                       onChanged: _onDistrictChanged,
+                      validator: (value) {
+                        return requiredFieldValidator(value, 'district');
+                      },
                     ),
                     const SizedBox(height: AppSpacing.spacing2xl),
 
@@ -252,7 +265,11 @@ class _AddressPageState extends State<AddressPage> with ValidationMixin {
                   onPressed: () async {
                     if (_formKey.currentState?.validate() ?? false) {
                       addMemberStore.onNextPage();
+                      return;
                     }
+                    SnackbarUtils.showErrorSnackBar(
+                      'Please fill all required fields',
+                    );
                   },
                 ),
               ),

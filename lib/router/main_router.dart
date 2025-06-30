@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 
 import '../features/add_member/add_member_screen.dart';
 import '../features/auth_guard/auth_guard_screen.dart';
-import '../features/dashboard/family_tree_page.dart';
+import '../features/dashboard/pages/family_tree_page.dart';
 import '../features/onboarding/onboarding_screen.dart';
 import 'route_helper.dart';
 

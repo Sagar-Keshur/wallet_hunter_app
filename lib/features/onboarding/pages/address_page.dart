@@ -4,6 +4,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/style_guide/style_guide.dart';
+import '../../../core/utils/snackbar_utils.dart';
 import '../../../core/utils/validation_mixin.dart';
 import '../../../core/widgets/widgets.dart';
 import '../store/onboarding_store.dart';
@@ -302,9 +303,12 @@ class _AddressPageState extends State<AddressPage> with ValidationMixin {
                 onPressed: () async {
                   if (_formKey.currentState?.validate() ?? false) {
                     onboardingStore.onNextPage();
+                    return;
                   }
+                  SnackbarUtils.showErrorSnackBar(
+                    'Please fill all required fields',
+                  );
                 },
-                // isDisabled: !onboardingStore.isAddressComplete,
               ),
             ),
             const SizedBox(height: AppSpacing.spacingLg),
